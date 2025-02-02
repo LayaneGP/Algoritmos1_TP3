@@ -1,7 +1,7 @@
 #include "./../include/graph.hpp"
 
 #include <iostream>
-#include <list>
+#include <vector>
 #include <limits>
 #include <queue>
 #include <unordered_set>
@@ -138,10 +138,10 @@ void findBestBatallions(unordered_map<string, Graph>& initial_sccs, unordered_ma
 
 
 // Busca em largura gulosa para encontrar o menor caminho no grafo que passe por todos os vértices, e uma única vez
-pair<int, list<string>> greedy_bfs(Graph& graph, string start){
+pair<int, vector<string>> greedy_bfs(Graph& graph, string start){
         
     unordered_set<string> visited; // Set não ordenado para saber se um vértice foi ou não visitado
-    list<string> path; // Caminho encontrado
+    vector<string> path; // Caminho encontrado
     int total_distance = 0; // Distância total do caminho encontrado
 
     // Marca o vértice inicial como visitado

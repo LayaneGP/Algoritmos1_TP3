@@ -24,4 +24,4 @@ void BFS(Graph& graph, string start, unordered_map<string, int>& dist);
 */
 
 // Busca em largura gulosa para encontrar o menor caminho no grafo que passe por todos os vértices, e uma única vez
-pair<int, list<string>> greedy_bfs(Graph& graph, string start);
+pair<int, vector<string>> greedy_bfs(Graph& graph, string start);

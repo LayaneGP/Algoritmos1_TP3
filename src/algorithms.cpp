@@ -3,22 +3,22 @@
 #include "./../include/graph.hpp"
 #include "./../include/algorithms.hpp"
 
-#include <list>
+#include <vector>
 
 // Utiliza força bruta
-pair<int, list<string>> brute_force(Graph& graph, string start){
-    return dfs(graph, start);
+pair<int, vector<string>> brute_force(Graph& graph){
+    return permutations(graph);
 };
 
 
 // Utiliza programação dinâmica
-pair<int, list<string>> dynamic(Graph& graph, string start){
+pair<int, vector<string>> dynamic(Graph& graph, string start){
 
 };
 
 
 // Utiliza estratégia gulosa
-pair<int, list<string>> greedy(Graph& graph, string start){
+pair<int, vector<string>> greedy(Graph& graph, string start){
     return greedy_bfs(graph, start);
 };
 

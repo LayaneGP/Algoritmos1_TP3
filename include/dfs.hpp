@@ -3,10 +3,10 @@
 #include "graph.hpp"
 
 #include <iostream>
-#include <unordered_map>
+#include <vector>
 
 // Função principal da busca em profundidade
-pair<int, list<string>> dfs(Graph& graph, string start);
+pair<int, vector<string>> permutations(Graph& graph);
 
 // Função recursiva da busca em profundidade
-void dfs_visit(Graph& graph, string start, unordered_map<string, int>& colors, string current, list<string>& path, list<string>& best_path, int& current_dist, int& min_dist);
+void permutations_rec(Graph& graph, pair<int, vector<string>>& best_path, vector<string> perm, int start_index, int end_index);

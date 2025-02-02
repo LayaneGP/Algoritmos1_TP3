@@ -34,11 +34,11 @@ int main(){
     }
 
     // Par que armazena a menor distância e o caminho encontrado para solucionar o problema
-    pair<int, list<string>> path;
+    pair<int, vector<string>> path;
 
     switch (type_algorithm){
         case 'b':       // Força bruta
-            path = brute_force(graph, min_distance.second);
+            path = brute_force(graph);
             break;
 
         case 'd':       // Programação dinâmica
