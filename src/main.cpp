@@ -1,5 +1,7 @@
+#include "./../include/bfs.hpp"
+#include "./../include/bruteForce.hpp"
+#include "./../include/dynamic.hpp"
 #include "./../include/graph.hpp"
-#include "./../include/algorithms.hpp"
 
 #include <iostream>
 #include <list>
@@ -38,15 +40,15 @@ int main(){
 
     switch (type_algorithm){
         case 'b':       // Força bruta
-            path = brute_force(graph);
+            path = permutations(graph);
             break;
 
         case 'd':       // Programação dinâmica
-            path = dynamic(graph, min_distance.second);
+            path = dynamic(graph, start);
             break;
 
         case 'g':       // Algoritmo guloso
-            path = greedy(graph, min_distance.second);
+            path = greedy_bfs(graph, start);
             break;
         
         default:

@@ -1,11 +1,9 @@
-#include "dfs.hpp"
-#include "graph.hpp"
+#include "./../include/bruteForce.hpp"
+#include "./../include/graph.hpp"
 
 #include <iostream>
 #include <vector>
 #include <limits>
-#include <unordered_map>
-#include <unordered_set>
 
 const int INF = numeric_limits<int>::max();  // Constante para representar uma distância infinita
 
@@ -30,6 +28,8 @@ void permutations_rec(Graph& graph, pair<int, vector<string>>& best_path, vector
     if(start_index == end_index){
         int current_cost = 0; // Custo inicial do caminho atual
         perm.push_back(perm[0]); // Adiciona o vértice inicial ao final da permutação para contabilizar a aresta de retorno
+
+        // Calcula o custo do caminho encontrado
         for(int i = 0, V = graph.numV(); i < V; i++){
             string from = perm[i];
             string to = perm[i+1];
@@ -41,6 +41,7 @@ void permutations_rec(Graph& graph, pair<int, vector<string>>& best_path, vector
             }
         }
 
+        // Se o caminho atual tiver custo menor, troca pelo anterior
         if(current_cost < best_path.first){
             perm.erase(perm.end());
             best_path = make_pair(current_cost, perm);
