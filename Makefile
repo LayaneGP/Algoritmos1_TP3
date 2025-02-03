@@ -1,5 +1,5 @@
 CXX = g++
-CXXFLAGS = -std=c++20 -g -Wall #-Wextra -Wpedantic -Wformat-security -Wconversion -Werror
+CXXFLAGS = -std=c++20 -g -Wall -Wextra -Wpedantic -Wformat-security -Wconversion -Werror
 # básico: -std=c++20 -g -Wall
 
 # pastas
@@ -8,7 +8,7 @@ INC_FOLDER = include
 OBJ_FOLDER = obj
 SRC_FOLDER = src
 
-TARGET = tp1
+TARGET = tp3
 SRC = $(wildcard $(SRC_FOLDER)/*.cpp)
 OBJ = $(patsubst $(SRC_FOLDER)/%.cpp, $(OBJ_FOLDER)/%.o, $(SRC))
 
