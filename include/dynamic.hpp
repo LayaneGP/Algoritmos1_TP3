@@ -6,4 +6,4 @@
 #include <vector>
 
 // Programação dinâmica
-pair<int, vector<string>> dynamic(Graph& graph, string start);
+pair<int, vector<string>> dynamic(Graph& graph);

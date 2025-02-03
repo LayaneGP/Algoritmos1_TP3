@@ -5,29 +5,29 @@
 #include <vector>
 #include <limits>
 #include <unordered_map>
+#include <algorithm>
 
-const int INF = numeric_limits<int>::max();  // Constante para representar uma distância infinita
+const int INF = std::numeric_limits<int>::max();
 
-// Programação dinâmica
-pair<int, vector<string>> dynamic(Graph& graph, string start){
+pair<int, vector<string>> dynamic(Graph& graph) {
     int num_V = graph.numV(); // Quantidade de vértices no grafo
+
+    // Seleciona o primeiro vértice como inicial
+    string start = graph.adj.begin()->first;
 
     unordered_map<string, int> vertices_to_numbers; // Mapa de um vértice para um inteiro que o representa
     unordered_map<int, string> numbers_to_vertices; // Mapa de um inteiro para o vértice que ele representa
 
-    vertices_to_numbers[start] = 0;
-    int v_index = 1;
+    int v_index = 0;
     for(const auto& v : graph.adj){
-        if(v.first != start){
-            vertices_to_numbers[v.first] = v_index;
-            numbers_to_vertices[v_index] = v.first;
-            v_index++;
-        }
+        vertices_to_numbers[v.first] = v_index;
+        numbers_to_vertices[v_index] = v.first;
+        v_index++;
     }
-    vertices_to_numbers[start] = 0;
-    numbers_to_vertices[0] = start;
 
-    vector<vector<int>> dist(num_V, vector<int>(num_V, 0)); // Matriz de distância dos vértices com valores iniciais infinitos
+    int start_index = vertices_to_numbers[start]; // Índice correspondente ao vértice de início
+
+    vector<vector<int>> dist(num_V, vector<int>(num_V, INF)); // Matriz de distância dos vértices com valores iniciais infinitos
 
     // Construção da matriz de distâncias
     for(const auto& pair : graph.adj){
@@ -39,82 +39,63 @@ pair<int, vector<string>> dynamic(Graph& graph, string start){
         }
     }
 
-    vector<vector<int>> dp(num_V, vector<int>(num_V, INF)); // Matriz da DP com valores iniciais infinitos
-    vector<vector<int>> prev(num_V, vector<int>(num_V, -1)); // Matriz dos antecessores com valores iniciais inválidos
+    int total_states = 1 << num_V; // dp[mask][i]: custo mínimo para visitar o conjunto de vértices 'mask' terminando no vértice i
 
-    for (int i = 0; i < num_V; i++) {
-        dp[0][i] = dist[0][i]; // Custo de ir do vértice inicial a cada outro
-        prev[1][i] = 0; // O caminho percorrendo um vértice vem de 0 (start)
-    }
+    vector<vector<int>> dp(total_states, vector<int>(num_V, INF)); // Matriz da DP com valores iniciais infinitos
+    vector<vector<int>> prev(total_states, vector<int>(num_V, -1)); // Matriz dos antecessores com valores iniciais inválidos
 
+    dp[1 << start_index][start_index] = 0;
 
-    // Preenchendo as tabelas dp e prev
-    // k = quantidade de vértices visitados
-    // i = vértice atual
-    // j = próximo vértice
-    for(int k = 1; k < num_V; k++){
-        for(int j = 0; j < num_V; j++){
-            for(int i = 0; i < num_V; i++){
-                if(i != j && dist[i][j] != INF && dp[k-1][i] != INF) {
-                    if(dp[k-1][i] + dist[i][j] < dp[k][j]){
-                        dp[k][j] = dp[k-1][i] + dist[i][j];
-                        prev[k][j] = i;
-                    }
+    // Itera sobre todos os estados (máscaras)
+    for (int mask = 0; mask < total_states; mask++) {
+        for (int i = 0; i < num_V; i++) {
+            if (dp[mask][i] == INF) continue;  // Estado não alcançado
+            // Tenta estender o caminho para cada vértice não visitado
+            for (int j = 0; j < num_V; j++) {
+                if (mask & (1 << j)) continue;  // Vértice j já foi visitado
+                if (dist[i][j] == INF) continue;  // Não há conexão entre i e j
+                int next_mask = mask | (1 << j);
+                if (dp[mask][i] + dist[i][j] < dp[next_mask][j]) {
+                    dp[next_mask][j] = dp[mask][i] + dist[i][j];
+                    prev[next_mask][j] = i;
                 }
             }
         }
     }
 
-    int min_cost = INF; // Menor custo até agora
-    int last_vertice = -1; // Último vértice no caminho
-
-    // Encontra o último vértice no caminho
-    for(int i = 0; i < num_V; i++){
-        if(dp[num_V - 1][i] + dist[i][0] < min_cost){
-            min_cost = dp[num_V - 1][i] + dist[i][0];
-            last_vertice = i;
+    // Encontra o custo mínimo voltando ao vértice de início
+    int best_cost = INF;
+    int last = -1;
+    int full_mask = (1 << num_V) - 1;
+    for (int i = 0; i < num_V; i++) {
+        if (dp[full_mask][i] == INF || dist[i][start_index] == INF) continue;
+        int cost = dp[full_mask][i] + dist[i][start_index];
+        if (cost < best_cost) {
+            best_cost = cost;
+            last = i;
         }
     }
 
     vector<int> numeric_path; // Vetor com o caminho numérico
 
-    // Reconstroi o caminho
-    for(int k = num_V - 1; k > 0; k--){
-        numeric_path.push_back(last_vertice);
-        last_vertice = prev[k][last_vertice];
+    // Reconstrução do caminho 
+    if (last == -1) {  // Caso não haja solução válida
+        return make_pair(INF, vector<string>());
     }
-    numeric_path.push_back(0); // Adiciona o vértice inicial
+    int mask = full_mask;
+    int current = last;
+    while (mask) {
+        numeric_path.push_back(current);
+        int temp = prev[mask][current];
+        mask = mask & ~(1 << current);
+        current = temp;
+    }
 
-    vector<string> path; // Caminho a ser retornado
-
-    for(int i = num_V - 1; i >= 0; i--){
+    // Converte o caminho numérico para os nomes dos vértices
+    vector<string> path;
+    for (int i : numeric_path) {
         path.push_back(numbers_to_vertices[i]);
     }
 
-    cout << endl;
-    for(const auto& v : vertices_to_numbers){
-        cout << v.first << ": " << v.second << endl;
-    }
-
-    cout << "Matriz de distâncias:" << endl;
-    for (int i = 0; i < num_V; i++) {
-        for (int j = 0; j < num_V; j++) {
-            if (dist[i][j] == INF) cout << "INF ";
-            else cout << dist[i][j] << " ";
-        }
-        cout << endl;
-    }
-
-        cout << endl;
-    cout << "Matriz dp:" << endl;
-    for(int i = 0; i < num_V; i++){
-        for(int j = 0; j < num_V; j++){
-            cout << dp[i][j] << "   ";
-        }
-        cout << endl;
-    }
-
-
-
-    return make_pair(min_cost, path);
-};
+    return make_pair(best_cost, path);
+}

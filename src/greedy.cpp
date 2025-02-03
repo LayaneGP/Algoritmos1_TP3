@@ -1,11 +1,10 @@
+#include "./../include/greedy.hpp"
 #include "./../include/graph.hpp"
 
 #include <iostream>
 #include <vector>
 #include <limits>
-#include <queue>
 #include <unordered_set>
-#include <unordered_map>
 
 const int INF = numeric_limits<int>::max();  // Constante para representar uma distância infinita
 

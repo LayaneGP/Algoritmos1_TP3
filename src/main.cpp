@@ -1,14 +1,11 @@
-#include "./../include/bfs.hpp"
+#include "./../include/greedy.hpp"
 #include "./../include/bruteForce.hpp"
 #include "./../include/dynamic.hpp"
 #include "./../include/graph.hpp"
 
 #include <iostream>
-#include <list>
 #include <limits>
-#include <stack>
 #include <vector>
-#include <unordered_map>
 
 using namespace std;
 
@@ -44,7 +41,7 @@ int main(){
             break;
 
         case 'd':       // Programação dinâmica
-            path = dynamic(graph, start);
+            path = dynamic(graph);
             break;
 
         case 'g':       // Algoritmo guloso
