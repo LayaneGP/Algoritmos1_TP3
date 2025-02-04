@@ -10,7 +10,7 @@
 using namespace std;
 
 const int INF = numeric_limits<int>::max();  // Constante para representar uma distância infinita
-/*
+
 // Função main para rodar os algoritmos como solicitado
 int main(){
     char type_algorithm;
@@ -61,7 +61,11 @@ int main(){
 
     return 0;
 }
-*/
+
+
+
+/*
+// Função main e bibliotecas adicionais para gerar a análise experimental
 
 #include <fstream>
 #include <sstream>
@@ -71,7 +75,7 @@ int main(){
 using namespace std;
 
 int main() {
-    int type_algorithm = 1; // Iterador para decidir o algoritmo a ser usado (1 = b; 2 = d; 3 = g)
+    int type_algorithm = 1; // Iterador para decidir o algoritmo a ser usado (1 = d; 2 = g; 3 = b)
 
     while(type_algorithm <= 3){
         int test_number = 0; // Número do teste atual
@@ -82,6 +86,9 @@ int main() {
             return 1;
         }
     
+        cout << "Algoritmo: " << type_algorithm << endl;
+        cout << "Teste | Tempo | Custo" << endl;
+        
         // Enquanto houver dados no arquivo
         while (!inputFile.eof()) {
             test_number++;
@@ -135,38 +142,37 @@ int main() {
             std::chrono::duration<double, std::milli> interval; // Duração em milissegundos
 
             switch (type_algorithm){
-                case 1:       // Força bruta
-                    time_start = chrono::high_resolution_clock::now(); // Tempo de início
-                    path = permutations(graph);
-                    time_end = chrono::high_resolution_clock::now(); // Tempo de término
-                    break;
-
-                case 2:       // Programação dinâmica
+                case 1:       // Programação dinâmica
                     time_start = chrono::high_resolution_clock::now(); // Tempo de início
                     path = dynamic(graph);
                     time_end = chrono::high_resolution_clock::now(); // Tempo de término
                     break;
 
-                case 3:       // Algoritmo guloso
+                case 2:       // Algoritmo guloso
                     time_start = chrono::high_resolution_clock::now(); // Tempo de início
                     path = greedy_bfs(graph, start_point);
                     time_end = chrono::high_resolution_clock::now(); // Tempo de término
                     break;
                 
+                case 3:       // Força bruta
+                    time_start = chrono::high_resolution_clock::now(); // Tempo de início
+                    path = permutations(graph);
+                    time_end = chrono::high_resolution_clock::now(); // Tempo de término
+                    break;
+
                 default:
                     break;
             }
             interval = time_end - time_start;
 
-            cout << "Teste: " << test_number << endl;
-            cout << "Algoritmo: " << type_algorithm << endl;
-            cout << "Tempo: " << interval.count() << endl;
-            
-            cout << "-----------------------------" << endl;
+            cout << test_number << "       " << interval.count() << "        " << path.first << endl;
         }
+        cout << "-----------------------------" << endl;
+        
         inputFile.close();
         type_algorithm++;
     }
     
     return 0;
 }
+*/
